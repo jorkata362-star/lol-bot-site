@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>League of Legends Tournament</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg2: #121a2b;
+      --panel: rgba(14, 21, 36, 0.88);
+      --gold: #f7d774;
+      --gold-2: #d89c32;
+      --cyan: #67e8f9;
+      --cyan-2: #38bdf8;
+      --text: #edf6ff;
+      --muted: #b9c8d9;
+      --line: rgba(255,255,255,0.08);
+      --green: #72f1b8;
+      --danger: #ff6b6b;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(103,232,249,0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(247,215,116,0.13), transparent 35%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .page {
+      width: min(1100px, 100%);
+      background: rgba(6, 10, 18, 0.7);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      overflow: hidden;
+      backdrop-filter: blur(6px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 14, 24, 0.8);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      position: relative;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      box-shadow: 0 0 20px rgba(247,215,116,0.5);
+      transform: rotate(45deg);
+    }
+
+    .brand-mark::before,
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 2px solid rgba(11,16,32,0.8);
+      border-radius: 8px;
+    }
+
+    .brand-mark::after {
+      inset: 14px;
+      border-width: 3px;
+      border-color: rgba(11,16,32,0.9);
+    }
+
+    .nav {
+      display: flex;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      padding: 54px 40px 30px;
+      align-items: center;
+    }
+
+    .left {
+      padding: 10px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(103,232,249,0.08);
+      border: 1px solid rgba(103,232,249,0.3);
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 0.95;
+      margin: 0 0 18px;
+      letter-spacing: -0.06em;
+      font-weight: 900;
+    }
+
+    .title-highlight {
+      background: linear-gradient(90deg, var(--cyan), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      color: #0b1020;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      box-shadow: 0 10px 25px rgba(247,215,116,0.25);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .meta {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(114,241,184,0.8);
+    }
+
+    .right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-card {
+      width: min(420px, 100%);
+      aspect-ratio: 1 / 1.1;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(103,232,249,0.22), transparent 20%),
+        linear-gradient(180deg, rgba(18,26,43,0.96), rgba(8,13,22,1));
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      box-shadow: inset 0 0 24px rgba(103,232,249,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-card::before {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 22px;
+    }
+
+    .emblem {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      transform: rotate(-15deg);
+    }
+
+    .hex {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(247,215,116,0.92), rgba(216,156,50,0.9));
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(247,215,116,0.22);
+    }
+
+    .hex::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      background: rgba(11,16,32,0.85);
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+      border: 2px solid rgba(103,232,249,0.45);
+    }
+
+    .inner-l {
+      position: absolute;
+      inset: 22%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(4rem, 5vw, 5.5rem);
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(247,215,116,0.25);
+      letter-spacing: -0.08em;
+    }
+
+    .logo-text {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 82%;
+      text-align: center;
+      font-size: 1.1rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--text);
+      text-shadow: 0 0 18px rgba(103,232,249,0.35);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 18px;
+      padding: 20px 40px 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 18px 16px;
+      min-height: 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .card .value {
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topbar {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .nav {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero {
+        padding: 32px 20px 18px;
+      }
+
+      .stats {
+        padding: 20px;
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>League of Legends Tournament</span>
+      </div>
+      <div class="nav">
+        <a href="#about">About</a>
+        <a href="#teams">Teams</a>
+        <a href="#register">Register</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="left">
+        <div class="eyebrow">Season 2026</div>
+        <h1>
+          Rise to the <span class="title-highlight">Rift</span>
+        </h1>
+        <p class="subtitle">
+          Join the ultimate battlefield of strategy, precision, and team play.
+          League of Legends Tournament brings together elite squads from every region
+          for a grand showcase of talent and glory.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="request.txt" target="_blank">View Request</a>
+          <a class="btn btn-secondary" href="request.txt" download>Download .txt</a>
+        </div>
+
+        <div class="meta">
+          <span><i class="dot"></i> 64 Teams</span>
+          <span><i class="dot"></i> 3 Days</span>
+          <span><i class="dot"></i> $25,000 Prize Pool</span>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="logo-card" aria-label="League of Legends Tournament logo">
+          <div class="emblem">
+            <div class="hex"></div>
+            <div class="inner-l">L</div>
+          </div>
+          <div class="logo-text">Tournament</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" id="about">
+      <div class="card">
+        <div class="label">Region</div>
+        <div class="value">Europe</div>
+      </div>
+      <div class="card">
+        <div class="label">Format</div>
+        <div class="value">5v5</div>
+      </div>
+      <div class="card">
+        <div class="label">Prize</div>
+        <div class="value">$25K</div>
+      </div>
+      <div class="card">
+        <div class="label">Stage</div>
+        <div class="value">Finals</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
